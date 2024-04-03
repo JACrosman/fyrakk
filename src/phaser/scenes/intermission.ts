@@ -2,7 +2,7 @@ import Phaser from "phaser";
 
 import orbies from "../../assets/orbies.png";
 import fyrakk from "../../assets/fyrakk.png";
-import bg from "../../assets/ground.jpg";
+import bg from "../../assets/ground2.jpg";
 
 export interface IntermissionConfig {
   speed: number;
@@ -77,12 +77,20 @@ export class Intermission extends Phaser.Scene {
     this.fyrakk = this.physics.add.staticImage(0, 0, "fyrakk").setCircle(50);
   }
 
+  showLabels(on: boolean) {
+    for (const orby of this.orbies) {
+      orby.getData("text")?.setVisible(on);
+    }
+  }
+
   generate(config: IntermissionConfig) {
     this.config = config;
     this.orbies = this.generateOrbies();
     this.currentTime = this.config.time;
     this.isRunning = true;
+    this.showLabels(this.config.showLabels);
     this.start();
+
 
     return this.selection;
   }

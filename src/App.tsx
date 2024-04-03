@@ -45,6 +45,7 @@ function App() {
         onSelection: (results) => {
           setIsRunning(false);
           setResults(results);
+          (GameRef.game.scene.scenes[0] as Intermission).showLabels(true);
         },
         time: 4000,
       }); // Assuming the start method is defined in the first scene
@@ -69,8 +70,10 @@ function App() {
   let resultOrbColor = "";
 
   if (results) {
-    resultOrbIcon = results.selected?.includes('O') ? orbyRed : orbyPurple;
-    resultOrbColor = results.selected?.includes('O') ? 'text-orange-500' : 'text-purple-500';
+    resultOrbIcon = results.selected?.includes("O") ? orbyRed : orbyPurple;
+    resultOrbColor = results.selected?.includes("O")
+      ? "text-orange-500"
+      : "text-purple-500";
 
     if (results.outOfTime) {
       resultText = "Out of Time!";
@@ -92,7 +95,12 @@ function App() {
             type="checkbox"
             id="showLabels"
             checked={showLabels}
-            onChange={(e) => setShowLabels(e.target.checked)}
+            onChange={(e) => {
+              setShowLabels(e.target.checked);
+              (GameRef.game.scene.scenes[0] as Intermission).showLabels(
+                e.target.checked
+              );
+            }}
           />
           <label htmlFor="showLabels">Show Labels</label>
         </div>
@@ -124,14 +132,18 @@ function App() {
       {!!results && (
         <div className="fixed top-[48px] left-0 right-0 bottom-0 bg-[#00000080]">
           <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 text-center flex flex-col gap-4">
-            <div className={`text-8xl ${resultColor} bg-[#00000090] p-6 flex flex-col gap-4`}>
+            <div
+              className={`text-8xl ${resultColor} bg-[#00000090] p-6 flex flex-col gap-4`}
+            >
               {resultText}
 
               {!results.win && !!results.selected && (
                 <div className="flex flex-col text-3xl justify-center">
                   <div>You selected</div>
                   <div className="flex gap-2 justify-center">
-                    <div className={resultOrbColor}>{results.selected?.replace(' O', "").replace(' P', "")}</div>
+                    <div className={resultOrbColor}>
+                      {results.selected?.replace(" O", "").replace(" P", "")}
+                    </div>
                     <img src={resultOrbIcon} width="42px" />
                   </div>
                 </div>
