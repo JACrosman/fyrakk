@@ -20,14 +20,14 @@ export interface IntermissionResults {
 }
 
 export class Intermission extends Phaser.Scene {
-  public fyrakk: Phaser.Types.Physics.Arcade.ImageWithStaticBody;
-  public orbyGroup: Phaser.Physics.Arcade.Group;
+  public fyrakk!: Phaser.Types.Physics.Arcade.ImageWithStaticBody;
+  public orbyGroup!: Phaser.Physics.Arcade.Group;
   public orbies: any[] = [];
-  public config: IntermissionConfig;
+  public config!: IntermissionConfig;
   public selection: any;
 
-  public timerText: Phaser.GameObjects.Text;
-  public timedEvent: Phaser.Time.TimerEvent;
+  public timerText!: Phaser.GameObjects.Text;
+  public timedEvent!: Phaser.Time.TimerEvent;
   public currentTime: number = 0;
   public isRunning: boolean = false;
 
@@ -40,14 +40,14 @@ export class Intermission extends Phaser.Scene {
     this.load.image("background", bg);
   }
 
-  update(time, delta) {
+  update(time: number, delta: number) {
     if (this.isRunning) {
       this.currentTime -= delta;
 
       if (this.currentTime <= 0) {
+        console.log(time);
         this.currentTime = 0;
         this.pause();
-        this.config.onSelection(false);
         this.config.onSelection({ win: false, outOfTime: true });
       }
 
@@ -62,8 +62,8 @@ export class Intermission extends Phaser.Scene {
   create() {
     const backgroundImage = this.add.image(0, 0, "background");
     backgroundImage.setScale(
-      this.game.config.width / backgroundImage.width,
-      this.game.config.height / backgroundImage.height
+      this.game.config.width as number / backgroundImage.width,
+      this.game.config.height as number / backgroundImage.height
     );
 
     // Create a text object to display the countdown timer
