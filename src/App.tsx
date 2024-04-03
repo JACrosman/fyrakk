@@ -13,7 +13,7 @@ import orbyPurple from "./assets/orby-sm-shadow.png";
 
 function App() {
   const [gameContainerMounted, setGameContainerMounted] = useState(false);
-  const [showLabels, setShowLabels] = useState(true);
+  const [showLabels, setShowLabels] = useState(false);
   const [selection, setSelection] = useState({
     text: "",
     icon: "",

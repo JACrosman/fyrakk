@@ -106,6 +106,7 @@ export class Intermission extends Phaser.Scene {
 
     // Create an array to store the last two colors chosen
     const prevColors: string[] = [];
+    const colors = ["red", "purple"];
     const colorCounts = {
       leftRedCount: 0,
       rightRedCount: 0,
@@ -115,7 +116,6 @@ export class Intermission extends Phaser.Scene {
 
     // Function to randomly choose a ball color
     function getRandomBallColor() {
-      const colors = ["red", "purple"];
       let color;
 
       // Ensure that the same color is not chosen more than twice in a row
@@ -142,8 +142,9 @@ export class Intermission extends Phaser.Scene {
     const ballRefs = [];
 
     const centerCount = Math.floor(numBalls / 2);
-    const middleStart = numBalls % 2 === 0 ? centerCount - 1 : centerCount;
-    const middleEnd = numBalls % 2 === 0 ? middleStart + 2 : middleStart + 1;
+    const isEven = numBalls % 2 === 0;
+    const middleStart = isEven ? centerCount - 1 : centerCount;
+    const middleEnd = isEven ? middleStart + 2 : middleStart + 1;
 
     let leftSpeedModifier = 2;
     for (let i = 0; i < middleStart; i++) {
@@ -154,8 +155,15 @@ export class Intermission extends Phaser.Scene {
     }
 
     for (let i = middleStart; i < middleEnd; i++) {
+      let color: string;
+      if (isEven && i === middleEnd - 1) {
+        color = ballRefs[i - 1]?.getData('color') === 'purple' ? 'red' : 'purple';
+      } else {
+        color = getRandomBallColor();
+      }
+      
       ballRefs.push(
-        this.generateOrby(getRandomBallColor(), numBalls, i, colorCounts, true, 1.25)
+        this.generateOrby(color, numBalls, i, colorCounts, true, 1.25)
       );
     }
 
@@ -229,6 +237,7 @@ export class Intermission extends Phaser.Scene {
       }
     }
     ball.setData("value", text);
+    ball.setData("color", text.includes('O') ? 'red' : 'purple');
 
     const textObj = this.add.text(ballX, ballY, text.replace(' O', "").replace(' P', ""), { fontSize: "16px" });
     textObj.setOrigin(0.5);
@@ -237,7 +246,6 @@ export class Intermission extends Phaser.Scene {
     ball.on("pointerdown", () => {
       if (this.isRunning) {
         this.pause();
-        console.log(text);
         this.config.onSelection({ win: this.selection === text, selected: text });
       }
     });
